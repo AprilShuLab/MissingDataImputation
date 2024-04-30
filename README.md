@@ -1,5 +1,5 @@
 # Benchmarking Machine Learning Missing Data Imputation Methods in Large-Scale Mental Health Survey Databases
-We investigated the missing data patterns in Simons Powering Autism Research (SPARK), a large-scale autism cohort (n=117,099) consisting of social functioning and behavioral surveys on participants with Autism Spectrum Disorder (ASD). In a subset of 15,196 ASD participants with complete data, we simulated three types of missingness patterns: Missing Completely at Random (MCAR) where missing values were randomly distributed across surveys, Missing Not at Random (MNAR) with Survey-Specific Missing Rates (SMR) where each survey has a unique missingness rate that corresponds to its overall missingness rate in the full dataset, and MNAR with Blockwise Survey-Specific Missing Rates (BSMR) that simulates when participants skip all questions in entire surveys. We evaluated the imputation performance on the overall dataset and on specific summary scores of four popular statistical and machine learning imputation methods - Multiple Imputation by Chained Equations (MICE), K-Nearest Neighbors (KNN), MissForest, and Multiple Imputation with Denoising Autoencoders (MIDAS). 
+We investigated the missing data patterns in Simons Powering Autism Research (SPARK), a large-scale autism cohort (n=117,099) consisting of social functioning and behavioral surveys on participants with autism. In a subset of 15,196 participants with autism with complete data, we simulated three types of missingness patterns: Missing Completely at Random (MCAR) where missing values were randomly distributed across surveys, Missing Not at Random (MNAR) with Survey-Specific Missing Rates (SMR) where each survey has a unique missingness rate that corresponds to its overall missingness rate in the full dataset, and MNAR with Blockwise Survey-Specific Missing Rates (BSMR) that simulates when participants skip all questions in entire surveys. We evaluated the imputation performance on the overall dataset and on specific summary scores of four popular statistical and machine learning imputation methods - Multiple Imputation by Chained Equations (MICE), K-Nearest Neighbors (KNN), MissForest, and Multiple Imputation with Denoising Autoencoders (MIDAS). 
 
 ## Simulation Scenarios
 ### 1. Missing Completely at Random (MCAR)
@@ -26,6 +26,13 @@ MissForest [3] (version 1.5) is an R package which uses a Random Forest approach
 
 ### 4. MIDAS
 MIDASpy [4] (version 1.3.1) is a Python package that was used to study the MIDAS algorithm. It introduces additional missing values into a given dataset and restores these values using an unsupervised neural network called a denoising autoencoder. Then, the resulting model is used to predict the values of the original missing data. Similar to MICE, MIDASpy generates multiple imputed datasets that are averaged to retrieve the final imputed data. Hyperparameter tuning was used to select the optimal values for the input drop, layer structure, and number of epochs.
+
+# Code
+In the Data Analysis folder of this repository, a linear regression model was run on the age, sex, and race of the participants with autism to see if there were any correlations with missingness. A summary table was also generated to visualize the demographic breakdown of the patients with autism and patterns in survey missingness.
+
+The Imputation Methods folder contains 4 separate folders for each imputation model that was explored: KNN, MIDAS, MICE, MissForest. Within each of these folders, there is a separate file for the hyperparameter tuning that was conducted as well as each of the simulation scenarios: MCAR, BSMR, SMR. The required libraries and packages are listed at the top of each file.
+
+Each of these models use the same datasets for imputation in order to maintain consistency. These datasets were created when running the MIDAS experiments. Therefore, only the code present in the MIDAS folder contains the logic that carries out each of the simulation scenarios. The remaining imputation models simply reference these generated datasets before conducting the missing value imputation.
 
 # References
 

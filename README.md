@@ -32,9 +32,10 @@ MIDASpy [4] (version 1.3.1) is a Python package that was used to study the MIDAS
 ### Script: [LinearRegressionModel.R](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Data%20Analysis/LinearRegressionModel.R)
 
 Input: Preprocessed merged survey data.
+
 Output: A linear regression analysis is run on the age, sex, and race of the participants with autism. Weights are assigned to each demographic to signify any correlations with missingness. 
 
-Script: [SummaryTable.R](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Data%20Analysis/SummaryTable.R)
+### Script: [SummaryTable.R](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Data%20Analysis/SummaryTable.R)
 
 Input: Preprocessed merged survey data.
  
@@ -65,7 +66,7 @@ Input: Preprocessed merged survey data with one-hot encoding.
 
 Output: Best hyperparameter value for "k" number of clusters for the KNN model
 
-Scripts:
+### Scripts:
 - [KNN_MCAR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/KNN/KNN_MCAR.py)
 - [KNN_BSMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/KNN/KNN_BSMR.py)
 - [KNN_SMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/KNN/KNN_SMR.py)

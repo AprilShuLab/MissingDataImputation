@@ -18,7 +18,7 @@ For each missing data simulation scenario described in the previous section, mul
 ### 1. MICE
 This study used the MICE [1] (version 3.16.0) package in R which employs a multiple imputation model. It uses a concept called Fully Conditional Specification, in which each incomplete variable is imputed by a different model. It generates multiple imputed datasets that are averaged to retrieve the final imputed data. Since MICE employs a regression-based approach, hyperparameter tuning was not performed.
 
-## 2. KNN
+### 2. KNN
 KNNImputer is a method in Python’s Scikit-learn package [2] (version 0.22) and was used to study the KNN algorithm. KNNImputer predicts each sample’s missing values by using the average value from the closest data points in the training set. Hyperparameter tuning was used to select the optimal value for the number of nearest neighbors used during imputation.
 
 ### 3. MissForest
@@ -28,11 +28,65 @@ MissForest [3] (version 1.5) is an R package which uses a Random Forest approach
 MIDASpy [4] (version 1.3.1) is a Python package that was used to study the MIDAS algorithm. It introduces additional missing values into a given dataset and restores these values using an unsupervised neural network called a denoising autoencoder. Then, the resulting model is used to predict the values of the original missing data. Similar to MICE, MIDASpy generates multiple imputed datasets that are averaged to retrieve the final imputed data. Hyperparameter tuning was used to select the optimal values for the input drop, layer structure, and number of epochs.
 
 # Code
-In the Data Analysis folder of this repository, a linear regression model was run on the age, sex, and race of the participants with autism to see if there were any correlations with missingness. A summary table was also generated to visualize the demographic breakdown of the patients with autism and patterns in survey missingness.
+## Step 1: Run initial data exploration
+Script: [LinearRegressionModel.R](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Data%20Analysis/LinearRegressionModel.R)
 
-The Imputation Methods folder contains 4 separate folders for each imputation model that was explored: KNN, MIDAS, MICE, MissForest. Within each of these folders, there is a separate file for the hyperparameter tuning that was conducted as well as each of the simulation scenarios: MCAR, BSMR, SMR. The required libraries and packages are listed at the top of each file.
+Input: Preprocessed merged survey data.
+Output: A linear regression analysis is run on the age, sex, and race of the participants with autism. Weights are assigned to each demographic to signify any correlations with missingness. 
 
-Each of these models use the same datasets for imputation in order to maintain consistency. These datasets were created when running the MIDAS experiments. Therefore, only the code present in the MIDAS folder contains the logic that carries out each of the simulation scenarios. The remaining imputation models simply reference these generated datasets before conducting the missing value imputation.
+Script: [SummaryTable.R](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Data%20Analysis/SummaryTable.R)
+
+Input: Preprocessed merged survey data.
+ 
+Output: A summary table is generated to visualize the demographic breakdown of the patients with autism and patterns in survey missingness. For each race, sex, and age group, percentage of patients with missingness rates <20%, 20-80%, and >80% are computed.
+
+## Step 2: Run MIDAS experiment to generate missing datasets.
+Each of the models (KNN, MIDAS, MICE, and MissForest) use the same datasets for imputation in order to maintain consistency. These datasets were created when running the MIDAS experiments. Therefore, only the code present in the MIDAS folder contains the logic that carries out each of the simulation scenarios. The remaining imputation models simply reference these generated datasets before conducting the missing value imputation.
+
+Script: [MIDAS_HyperparameterTuning.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MIDAS/MIDAS_HyperparameterTuning.py)
+Input: Preprocessed merged survey data with one-hot encoding.
+Output: Best hyperparameters across several missingness percentages, model architectures, input drops, and training epochs for the MIDAS model.
+
+Scripts:
+- [MIDAS_MCAR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MIDAS/MIDAS_MCAR.py)
+- [MIDAS_BSMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MIDAS/MIDAS_BSMR.py)
+- [MIDAS_SMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MIDAS/MIDAS_SMR.py)
+Input: Preprocessed and normalized merged survey data with one-hot encoding.
+Output: Datasets are generated with missing values for the MCAR, BSMR, and SMR simulation scenarios respectively. These scripts also generate datasets with imputed values using the MIDAS model.
+
+## Step 3: Run KNN experiment.
+Script: [KNN_HyperparameterTuning.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/KNN/KNN_HyperparameterTuning.py)
+Input: Preprocessed merged survey data with one-hot encoding.
+Output: Best hyperparameter value for "k" number of clusters for the KNN model
+
+Scripts:
+- [KNN_MCAR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/KNN/KNN_MCAR.py)
+- [KNN_BSMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/KNN/KNN_BSMR.py)
+- [KNN_SMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/KNN/KNN_SMR.py)
+Input: The datasets with missing values that were created during the MIDAS experiment for the MCAR, BSMR, and SMR simulation scenarios respectively.
+Output: These scripts generate datasets with imputed values using the KNN model.
+
+## Step 3: Run MICE experiment.
+Scripts:
+- [MICE_MCAR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MICE/MICE_MCAR.py)
+- [MICE_BSMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MICE/MICE_BSMR.py)
+- [MICE_SMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MICE/MICE_SMR.py)
+Input: The datasets with missing values that were created during the MIDAS experiment for the MCAR, BSMR, and SMR simulation scenarios respectively.
+Output: These scripts generate datasets with imputed values using the MICE model.
+
+## Step 3: Run MissForest experiment.
+Script: [MissForest_HyperparameterTuning.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MissForest/MissForest_HyperparameterTuning.py)
+Input: Preprocessed merged survey data with one-hot encoding.
+Output: Best hyperparameter values for number of trees and maximum number of iterations for the MissForest model.
+
+Scripts:
+- [MissForest_MCAR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MissForest/MissForest_MCAR.py)
+- [MissForest_BSMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MissForest/MissForest_BSMR.py)
+- [MissForest_SMR.py](https://github.com/AprilShuLab/MissingDataImputation/blob/main/Imputation%20Methods/MissForest/MissForest_SMR.py)
+Input: The datasets with missing values that were created during the MIDAS experiment for the MCAR, BSMR, and SMR simulation scenarios respectively.
+Output: These scripts generate datasets with imputed values using the MissForest model.
+
+
 
 # References
 
